@@ -1,0 +1,96 @@
+# FaFaCMS 后端一键部署（含 MySQL/Redis/phpMyAdmin/接口文档）
+# 用法：./deploy.sh  （勿直接 docker compose up，deploy.sh 会准备数据目录/网络/镜像）
+services:
+  fafaredis:
+    container_name: fafaredis
+    restart: always
+    image: redis:5.0.5
+    ports:
+      - "16379:6379"
+    volumes:
+      - ${DATA_DIR:-/opt/fafacms}/redis/data:/data
+      - ${DATA_DIR:-/opt/fafacms}/redis/conf:/usr/local/etc/redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - fafa-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "123456789", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  fafamysql:
+    container_name: fafamysql
+    restart: always
+    image: mysql:5.7.27
+    ports:
+      - "13307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456789"
+    volumes:
+      - ${DATA_DIR:-/opt/fafacms}/mysql/data:/var/lib/mysql
+      - ${DATA_DIR:-/opt/fafacms}/mysql/conf:/etc/mysql/conf.d
+    networks:
+      - fafa-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p123456789"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  fafaphpmyadmin:
+    container_name: fafaphpmyadmin
+    restart: always
+    image: phpmyadmin/phpmyadmin:5.2.2
+    ports:
+      - "8000:80"
+    environment:
+      PMA_HOST: fafamysql
+    networks:
+      - fafa-net
+    depends_on:
+      - fafamysql
+
+  fafacms:
+    container_name: fafacms
+    restart: always
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: hunterhug/fafacms:latest
+    ports:
+      - "8080:8080"
+    environment:
+      RUN_OPTS: "-config=/root/fafacms/config.yaml -history_record=true -init_db=true -single_login=true"
+      # 数据加密根密钥：由 deploy.sh 注入（环境变量或 $DATA_DIR/secret/kek.key）。
+      # 切勿把真实密钥写进本文件（本文件入库）。
+      FAFACMS_KEK_ROOT: "${FAFACMS_KEK_ROOT}"
+    volumes:
+      - ${DATA_DIR:-/opt/fafacms}/backend/config.yaml:/root/fafacms/config.yaml
+      - ${DATA_DIR:-/opt/fafacms}/backend/storage:/root/fafacms/storage
+      - ${DATA_DIR:-/opt/fafacms}/backend/storage_x:/root/fafacms/storage_x
+      - ${DATA_DIR:-/opt/fafacms}/backend/log:/root/fafacms/log
+    networks:
+      - fafa-net
+    depends_on:
+      fafamysql:
+        condition: service_healthy
+      fafaredis:
+        condition: service_healthy
+
+  # 接口文档（docsify），跟随后端一起部署
+  fafadoc:
+    container_name: fafadoc
+    restart: always
+    build:
+      context: ../docs
+      dockerfile: Dockerfile_docsify
+    image: hunterhug/fafadoc:latest
+    ports:
+      - "9889:3000"
+    networks:
+      - fafa-net
+
+networks:
+  fafa-net:
+    external: true

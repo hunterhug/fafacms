@@ -1,0 +1,76 @@
+# 全局配置
+DefaultConfig:
+  # 服务监听端口
+  WebPort: :8080
+  # 是否使用对象存储，否时存储在本地
+  StorageOss: false
+  # 本地文件存储位置（容器内路径，对应宿主机数据目录 backend/storage）
+  StoragePath: /root/fafacms/storage
+  # 关闭注册功能
+  CloseRegister: false
+  # 是否加密存储本地文件（仅本地模式生效；OSS 模式强制不加密）
+  # 默认开启；如需关闭可设为 false，或用环境变量 FAFACMS_FILE_ENCRYPT=0
+  EncryptFile: true
+  # 打开调试日志
+  LogDebug: true
+  # 日志地址（容器内路径，对应宿主机数据目录 backend/log）
+  LogPath: /root/fafacms/log/fafacms_log.log
+
+# 对象存储配置
+OssConfig:
+  # 区域
+  Endpoint: oss-cn-shenzhen.aliyuncs.com
+  # 桶名
+  BucketName: syoss
+  # 密钥对
+  AccessKeyId: 1111
+  AccessKeySecret: 11111
+
+# 数据库配置
+DbConfig:
+  # 数据库名
+  Name: fafa
+  # 数据库地址：走 compose 服务网络，服务名 fafamysql，跨系统无需改
+  Host: fafamysql
+  # 数据库用户名，*必填
+  User: root
+  # 数据库密码，*必填
+  Pass: 123456789
+  # 数据库端口（容器内端口）
+  Port: 3306
+  # 数据库最大空闲连接数
+  MaxIdleConns: 10
+  # 数据库最大打开连接数
+  MaxOpenConns: 20
+  # 数据库日志调试
+  Debug: true
+  # 数据库调试日志是否打印到文件中
+  # 当 debug = true 时有效，false 时打印到终端
+  DebugToFile: true
+  # 数据库调试日志打印到的文件路径（容器内路径）
+  # 当 DebugToFile = true 时有效
+  DebugToFileName: /root/fafacms/log/fafacms_db.log
+
+# 邮件配置
+MailConfig:
+  # 服务商地址
+  Host: smtp-mail.outlook.com
+  # 服务商端口
+  Port: 587
+  # 账户密码
+  Account: your_email@example.com
+  Password: your_smtp_password
+  # 邮件验证码内容
+  From: FaFaCMS
+  Subject: "FaFa CMS Code"
+  Body: "%s Code is <br/> <p style='text-align:center'>%s</p> <br/>Valid in 5 minute."
+
+# Session设置
+SessionConfig:
+  # Redis地址：走 compose 服务网络，服务名 fafaredis
+  RedisHost: fafaredis:6379
+  RedisMaxIdle: 64
+  RedisMaxActive: 0
+  RedisIdleTimeout: 120
+  RedisDB: 0
+  RedisPass: 123456789

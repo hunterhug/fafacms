@@ -1,0 +1,90 @@
+# 启动配置示例：复制为 config.yaml 后按需修改
+#   cp config.example.yaml config.yaml
+#
+# 注意：
+#   - config.yaml 已被 .gitignore 忽略，请勿把真实凭据提交进仓库。
+#   - 数据加密根密钥通过环境变量 FAFACMS_KEK_ROOT 注入，
+#     未设置时后端会回退到代码内置的默认密钥并在启动日志打印安全警告。
+#     生产环境务必显式设置，并单独备份，丢失后密文无法恢复。
+
+# 全局配置
+DefaultConfig:
+  # 服务监听端口
+  WebPort: :8080
+  # 是否使用对象存储，否时存储在本地
+  StorageOss: false
+  # 本地文件存储位置
+  StoragePath: ./data/storage
+  # 关闭注册功能
+  CloseRegister: false
+  # 是否加密存储本地文件（仅本地模式生效；OSS 模式强制不加密）
+  # 默认开启；如需关闭可设为 false，或用环境变量 FAFACMS_FILE_ENCRYPT=0
+  EncryptFile: true
+  # 打开调试日志
+  LogDebug: true
+  # 日志地址
+  LogPath: ./data/log/fafacms_log.log
+
+# 对象存储配置（StorageOss 为 true 时生效）
+OssConfig:
+  # 区域
+  Endpoint: oss-cn-shenzhen.aliyuncs.com
+  # 桶名
+  BucketName: your_bucket
+  # 密钥对
+  AccessKeyId: your_access_key_id
+  AccessKeySecret: your_access_key_secret
+
+# 数据库配置
+DbConfig:
+  # 数据库名
+  Name: fafa
+  # 数据库地址，*必填
+  Host: 127.0.0.1
+  # 数据库用户名，*必填
+  User: root
+  # 数据库密码，*必填
+  Pass: your_mysql_password
+  # 数据库端口，默认值：3306
+  Port: 3306
+  # 数据库最大空闲连接数
+  MaxIdleConns: 10
+  # 数据库最大打开连接数
+  MaxOpenConns: 20
+  # 数据库日志调试
+  Debug: true
+  # 数据库调试日志是否打印到文件中
+  # 当 debug = true 时有效，false 时打印到终端
+  DebugToFile: true
+  # 数据库调试日志打印到的文件路径
+  # 当 DebugToFile = true 时有效
+  DebugToFileName: ./data/log/fafacms_db.log
+
+# 邮件配置（注册激活、找回密码发信）
+MailConfig:
+  # 邮件服务器地址
+  Host: smtp-mail.outlook.com
+  # 邮件服务器端口
+  Port: 587
+  # 账户
+  Account: your_email@example.com
+  # 密码（多数邮箱服务商要求使用应用专用密码）
+  Password: your_smtp_password
+  # 邮件验证码内容
+  From: FaFaCMS
+  # 邮箱发送主题
+  Subject: "FaFa CMS Code"
+  # 邮箱内容，两个占位符，第二个%s为验证码，第一个是字符串功能。
+  Body: "%s Code is <br/> <p style='text-align:center'>%s</p> <br/>Valid in 5 minute."
+
+# Session 设置
+SessionConfig:
+  # Redis 地址
+  RedisHost: 127.0.0.1:6379
+  RedisMaxIdle: 64
+  RedisMaxActive: 0
+  RedisIdleTimeout: 120
+  # Redis 默认连接数据库
+  RedisDB: 0
+  # Redis 密码（可为空）
+  RedisPass: your_redis_password

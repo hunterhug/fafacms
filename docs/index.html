@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FaFaCMS-文档</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="./resource/static/docsify-4.12.1/lib/themes/vue.css">
+
+</head>
+<body>
+  <div id="app">正在火速加载中</div>
+  <script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+      navigator.serviceWorker.register('sw.js')
+    }
+  </script>
+  <script>
+    window.$docsify = {
+      coverpage: true,
+      name: 'FaFaCMS-文档',
+      repo: 'https://github.com/hunterhug/fafacms',
+      loadSidebar: true,
+      alias: {
+      '/.*/_sidebar.md': '/_sidebar.md',
+      '/.*/_navbar.md': '/_navbar.md'
+      },
+      loadNavbar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      count:{
+        countable:true,
+        fontsize:'0.9em',
+        color:'rgb(90,90,90)',
+        language:'chinese'
+      }
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="./resource/static/docsify-4.12.1/lib/plugins/zoom-image.min.js"></script>
+  <script src="./resource/static/docsify-4.12.1/lib/plugins/emoji.min.js"></script>
+  <script src="./resource/static/docsify-copy-code-2.1.1/dist/docsify-copy-code.min.js"></script>
+  <script src="./resource/static/docsify-4.12.1/lib/docsify.min.js"></script>
+
+  <!-- <script src="//unpkg.com/docsify-count/dist/countable.js"></script> -->
+  <script src="./resource/static/countable.js"></script> 
+  <!-- <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script> -->
+  <script src="./resource/static/prism-bash.min.js"></script>
+  <!-- <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-go.min.js"></script> -->
+  <script src="./resource/static/prism-go.min.js"></script>
+</body>
+</html>

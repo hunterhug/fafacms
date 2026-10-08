@@ -1,0 +1,12 @@
+/install
+/web
+*.md
+*.sh
+/Godeps
+/.idea
+/data
+/doc
+.git
+.DS_Store
+.gitignore
+/docs

@@ -1,0 +1,14 @@
+/.idea
+/data
+.vscode
+*.exe
+.DS_Store
+# Python 缓存（install/seed 下的脚本）
+__pycache__/
+*.pyc
+/essay
+
+# 本地配置与内部文档，不入库
+/config.yaml
+/plan/
+/AGENTS.md
